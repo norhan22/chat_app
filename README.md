@@ -12,6 +12,7 @@
     - **full-duplex** :  describes simultaneous data transmission and receptions over one channel.
     - **Half-duplex** devices can only transmit in one direction at one time.
       Data can move in two directions, but not at the same time. 
+      
       <img
       src="https://www.comms-express.com/infozone/wp-content/uploads/2017/01/half-full-duplex.png">
 

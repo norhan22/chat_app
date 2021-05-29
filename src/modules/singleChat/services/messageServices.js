@@ -3,6 +3,7 @@ const messages = require('../models/messages'),
     sendMessage: (msg) => {
       msg.id = messages.length + 1 
       messages.push(msg)
+      
       return messages
     },
     getMessages: () => {

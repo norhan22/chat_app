@@ -10,54 +10,12 @@
     <h1>Chat APP</h1>
     <a href="/api/chat/contacts">Chat Contacts</a>
     <div id="messages"></div>
-    <form id="chat">
-      <textarea></textarea>
+    <form id="chat" >
+      <input type="text"></input>
 
       <button type="submit">send</button>
     </form>
     <script src="socket-client.js"></script>
-    <script>
-      const socket = io(),
-        resource = 'http://localhost:8080/api/chat',
-        // MSG
-        form = document.getElementById('chat'),
-        msgContent = form.querySelector('textarea'),
-        messagesDiv = document.getElementById('messages');
-
-      // HTTP REQUEST
-      function httpRequest(method, link, data) {
-        const xhttp = new XMLHttpRequest(),
-          result = new Promise((resolve, reject) => {
-            xhttp.onreadystatechange = () => {
-              if (this.status == 200) resolve(xhttp.response);
-              else reject(xhttp.response);
-              console.table('xhttp.response', xhttp.response);
-            };
-          });
-        xhttp.open(method, link, true);
-        xhttp.setRequestHeader('Content-type', 'application/json');
-        xhttp.send(JSON.stringify(data));
-        return result;
-      }
-      function updateMesages() {
-        const messages = httpRequest('GET', `${resource}/messages`);
-        console.log('messages', messages);
-        messagesDiv.innerText = messages;
-      }
-
-      // Submit MSG
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let result,
-          payload = {};
-        if (msgContent) {
-          payload.content = msgContent.value;
-          console.log('payload', payload);
-          result = httpRequest('POST', `${resource}/send-message`, payload);
-        } else alert('there is no message');
-        console.log('result', result);
-      });
-      updateMesages();
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>

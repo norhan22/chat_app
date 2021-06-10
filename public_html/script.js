@@ -1,9 +1,17 @@
-const socket = io(),
+
+const
+  socket = io(),
   resource = 'http://localhost:8080/api/chat',
   // MSG
-  form = document.getElementById('chat'),
-  msgContent = form.querySelector('input'),
-  messagesDiv = document.getElementById('messages')
+  chatForm = document.getElementById('chat'),
+  msgContent = chatForm.querySelector('input'),
+  messagesDiv = document.getElementById('messages'),
+  // Sign up
+  signUpForm = document.getElementById('signUp'),
+  signUpName = signUpForm.querySelector('input').value
+ 
+let  userID = null, contacts = []
+
 
 // HTTP REQUEST
 function httpRequest (method, link, data) {
@@ -17,41 +25,85 @@ function httpRequest (method, link, data) {
     xhttp.send(JSON.stringify(data))
     
     xhttp.onload = function () {
-      if (this.status == 200) resolve(xhttp.response)
+      if (this.status == 200) resolve(JSON.parse(xhttp.response))
       else reject(xhttp.response)
     }
    
   })
 }
 
-// function updateMesages () {
+//////////////////////////
+//  Users 
+//////////////////////////
 
-//   httpRequest('GET', `${resource}/messages`)
-//     .then(res => {
-//       const messages = JSON.parse(res),
-//         list = document.createElement('ul')
+function submitUser () {
+  const payload = {}
+  payload.name =  signUpName
+  httpRequest('POST', `${resource}/addContact`, payload)
+    .then(res => {
+      console.log('addContact res', res)
+      chatForm.classList.remove('hide')
+      chatForm.classList.add('show')
+     
+      signUpForm.classList.remove('show')
+      signUpForm.classList.add('hide')
+      userID = res.id
+      
+      const welcome = document.createElement('h4')
+      welcome.textContent = `welcome ${signUpName}`
+      messagesDiv.appendChild(welcome)
+      socket.emit('newUser', payload)
+      
 
-//       for (let i = 0; i < messages.length; i++) {
-//         list.innerHTML += `<li>  ${messages[i]}</li>`
-//       }
-//       messagesDiv.appendChild(list)
-//     })
- 
-// }
+    })
+    .catch(err => {
+      console.log('addContact err', err)
+    })
 
+}
+function getContacts () {
+  httpRequest('GET', `${resource}/contacts`)
+    .then(res => {
+      contacts = res
+    })
 
-// Submit MSG
-form.addEventListener('submit', (e) => {
+}
+// Register Contact
+signUpForm.addEventListener('submit', function (e) {
   e.preventDefault()
+  if (signUpName) submitUser()
+  return false
+})
+
+//////////////////////////
+//  Message
+//////////////////////////
+function updateMessages (data) {
+  const
+    msg = data.content,
+    messageEl = document.createElement('p')
+        
+  messageEl.innerText = `${signUpName} : ${msg}`
+  messagesDiv.appendChild(messageEl)
+}
+function submitMsg () {
   const payload = {}
   if (msgContent) {
     payload.content = msgContent.value
+    payload.senderId = userID
+    
+    console.log('payload', payload)
     httpRequest('POST', `${resource}/send-message`, payload)
       .then((res) => {
-        console.log('res', res)
-        messagesDiv.append(JSON.parse(res.content))
+        updateMessages(res)        
       })
-      .catch((err) => console.log('err', err))
-  } else alert('there is no message')
- 
+      .catch((err) => { document.getElementById('error').innerText = err })
+  } else alert('lease enter a message')
+}
+// Submit MSG
+chatForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  submitMsg()
+  return false
+
 })

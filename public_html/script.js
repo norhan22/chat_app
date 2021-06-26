@@ -32,6 +32,19 @@ function httpRequest (method, link, data) {
   })
 }
 
+/////////////////////////////////
+// Socket IO 
+////////////////////////////////
+// Emit 
+function emitSocket (name, payload) {
+  socket.emit(name, payload)
+}
+
+// Listen 
+function listenSocket (name, callback) {
+  socket.on(name, callback)
+}
+
 //////////////////////////
 //  Users 
 //////////////////////////
@@ -48,12 +61,13 @@ function submitUser () {
       signUpForm.classList.remove('show')
       signUpForm.classList.add('hide')
       userID = res.id
+      payload.id = res.id
       
       const welcome = document.createElement('h4')
       welcome.textContent = `welcome ${signUpName}`
       messagesDiv.appendChild(welcome)
-      socket.emit('newUser', payload)
-      
+
+      emitSocket('newUser', payload)      
 
     })
     .catch(err => {
@@ -75,15 +89,18 @@ signUpForm.addEventListener('submit', function (e) {
   return false
 })
 
+// Get New User Data
+listenSocket('newUser', (user) => alert(`${user.name} is registered`))
 //////////////////////////
 //  Message
 //////////////////////////
 function updateMessages (data) {
   const
     msg = data.content,
-    messageEl = document.createElement('p')
+    messageEl = document.createElement('p'),
+    isSent = data.senderId === userID
         
-  messageEl.innerText = `${signUpName} : ${msg}`
+  messageEl.innerText = `${isSent ? signUpName : data.senderName} : ${msg}`
   messagesDiv.appendChild(messageEl)
 }
 function submitMsg () {
@@ -95,7 +112,8 @@ function submitMsg () {
     console.log('payload', payload)
     httpRequest('POST', `${resource}/send-message`, payload)
       .then((res) => {
-        updateMessages(res)        
+        updateMessages(res)
+        emitSocket('newMsg', payload)
       })
       .catch((err) => { document.getElementById('error').innerText = err })
   } else alert('lease enter a message')
@@ -107,3 +125,5 @@ chatForm.addEventListener('submit', function (e) {
   return false
 
 })
+// Socket New Msg
+listenSocket('newMsg', (msg) => updateMessages(msg))

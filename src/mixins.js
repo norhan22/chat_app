@@ -4,8 +4,8 @@ const
   mixins = {
     checkValidation : (data) => {
       const schema = Joi.object({
-          content: Joi.string().min(3).required()
-          // sender_id: Joi.number().required(),
+          content: Joi.string().min(3).required(),
+          senderId: Joi.number().required()
           // receiver_id:Joi.number().required()
         }),
         {error} = schema.validate(data)

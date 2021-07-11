@@ -13,8 +13,7 @@
     - **Half-duplex** devices can only transmit in one direction at one time.
       Data can move in two directions, but not at the same time. 
       
-      <img
-      src="https://www.comms-express.com/infozone/wp-content/uploads/2017/01/half-full-duplex.png">
+      <img src="https://www.comms-express.com/infozone/wp-content/uploads/2017/01/half-full-duplex.png">
 
 
 - The WebSocket API is an advanced technology that makes it possible to open a

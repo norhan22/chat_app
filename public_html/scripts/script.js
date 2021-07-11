@@ -49,7 +49,7 @@ function updateMessages (data) {
 
   if (isSent) messageEl.classList.add('sent')
 
-  messageEl.innerText = `${data.senderName} : ${msg}`
+  messageEl.innerText = `${isSent ? activeUser.name : data.senderName} : ${msg}`
   messagesDiv.appendChild(messageEl)
 }
 

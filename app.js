@@ -1,4 +1,3 @@
-
 const
   express = require('express'),
   app = express(),
@@ -15,17 +14,18 @@ const
 
 app.use(express.json())
 app.use('/api/chat', singleChatRoutes)
-app.use((req, res, next) => {
-  req.io = io
- 
-  next()
-})
+
 io.on('connection', (socket) => {
   socket.on('newUser', (user) => socket.broadcast.emit('newUser', user))
   socket.on('newMsg', (msg) => {
-    const senderInfo = services.getContact(msg.senderId)
-    msg.senderName = senderInfo.name
-    socket.broadcast.emit('newMsg', msg)
+    services.getContact(msg.senderId).then((res) => {
+      console.log('res', res)
+      msg.senderName = res.name || ''
+      socket.broadcast.emit('newMsg', msg)
+      console.log('msg', msg) 
+    })
+
+   
   })
 
 })

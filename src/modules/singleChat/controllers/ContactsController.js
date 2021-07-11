@@ -6,7 +6,7 @@ const services = require('../services/contactsServices'),
     getContact: (req, res) => {
       const contactId = req.body.params.id
       console.log('contactId', contactId)
-      res.send(services.getContact(contactId))
+      services.getContact(contactId).then(res =>  res.send(res))
     },
     addContact: (req, res) => {
       res.send(services.addContact(req.body))

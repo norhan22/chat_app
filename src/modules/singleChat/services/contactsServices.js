@@ -5,8 +5,12 @@ const data = require('../models/Contacts'),
       return data
     },
     getContact: (id) => {
-     
-      return data.find(e => e.id === id)
+      return new Promise((resolve, reject) => {
+        const matched = data.find(e => e.id === id)
+        if (matched.id) resolve(matched)
+        else reject('there is no contact with with id')
+       
+      })
     },
     addContact: (newContact) => {
       newContact.id = data.length + 1

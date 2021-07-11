@@ -6,12 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat App</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
   </head>
 
   <body>
     <h1>Chat APP</h1>
     <a href="/api/chat/contacts">Chat Contacts</a>
+    <div id="contacts">
+      <p><span id="#num"></span></p>
+    </div>
     <!-- sign up Form -->
     <form id="signUp" class="show">
       <h5>enter your name</h5>
@@ -27,8 +30,9 @@
       <span id="error"></span>
 
     </form>
-    <script src="socket-client.js"></script>
-    <script src="script.js"></script>
+    <script src="scripts/socket-client.js"></script>
+    <script src="scripts/chat.js"></script>
+    <script src="scripts/script.js"></script>
   </body>
 
 </html>

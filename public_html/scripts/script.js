@@ -2,8 +2,8 @@ const
   socketIo = io(),
   apiResource = 'http://localhost:8081/api/chat',
   addContactEndpoint = `${apiResource}/addContact`,
-  sendMsgEndpoint = `${apiResource}//send-message`,
-  getContactsEdpoint = `${apiResource}/contacts`,
+  sendMsgEndpoint = `${apiResource}/send-message`,
+  getContactsEndpoint = `${apiResource}/contacts`,
 
 
   $ = document.querySelector.bind(document),
@@ -16,20 +16,18 @@ const
 
   // Sign up
   signUpForm = $('#signUp'),
-  User = signUpForm.querySelector('input').value,
   activeUser = {}
 
 
 const chat = new Chat()
 
 //////////////////////////
-//  UI 
+//  UI
 //////////////////////////
 function welcome () {
   const welcome = document.createElement('h4')
-  welcome.textContent = `welcome ${activeUser.name}`
+  welcome.innerHTML = `welcome <span style="color:green"> ${activeUser.name}</span>`
   messagesDiv.appendChild(welcome)
-
 }
 
 function showChat () {
@@ -54,18 +52,18 @@ function updateMessages (data) {
 }
 
 /////////////////////////////////
-// Socket IO 
+// Socket IO
 ////////////////////////////////
-// Emit 
+// Emit
 function emitSocket (name, payload) {
   socketIo.emit(name, payload)
 }
 
-// Listen 
+// Listen
 function listenSocket (name, callback) {
   socketIo.on(name, callback)
 }
-// Listeners 
+// Listeners
 (function () {
   listenSocket('newUser', (user) => alert(`${user.name} is registered`))
 })();
@@ -76,7 +74,7 @@ function listenSocket (name, callback) {
 })()
 
 //////////////////////////
-//  Handle Errors 
+//  Handle Errors
 //////////////////////////
 function errorMsg (err, errFrom = '') {
   $('#error').innerText = err
@@ -92,14 +90,14 @@ function resetErrMsg () {
 signUpForm.addEventListener('submit',
   function (e) {
     e.preventDefault()
-    if (User) { 
-      chat.submitUser(User, addContactEndpoint)
+    const userName = signUpForm.querySelector('input').value
+    if (userName) {
+      chat.submitUser(userName, addContactEndpoint)
         .then((res) => {
           emitSocket('newUser', res)
           resetErrMsg()
           activeUser.name = res.name
           activeUser.id = res.id
-          
           welcome()
           showChat()
         }).catch(err => errorMsg(err))
@@ -125,7 +123,7 @@ chatForm.addEventListener('submit',
     e.preventDefault()
     if (msgContent.value) sendMsg()
     else errorMsg('please enter a message')
-  
+
     return false
 
   })

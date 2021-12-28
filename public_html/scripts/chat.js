@@ -36,15 +36,14 @@ class Chat extends BasicRules {
   }
 
   //////////////////////////
-  //  Handle Errors 
+  //  Handle Errors
   //////////////////////////
   errorMsg (err, errFrom = '') {
     console.error(`${errFrom || ''}`, err)
-
   }
 
   //////////////////////////
-  //  Contacts 
+  //  Contacts
   //////////////////////////
 
   submitUser (userName, endpoint) {
@@ -80,7 +79,7 @@ class Chat extends BasicRules {
 
   submitMsg (payload, endPoint) {
     return new Promise((resolve, reject) => {
-      
+
       this.httpRequest('POST', endPoint, payload)
         .then((res) => {
           resolve(res)

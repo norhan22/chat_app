@@ -1,9 +1,9 @@
 const
   express = require('express'),
   routes = express.Router(),
-  controllers = require('./controllers/index')
-  
-    
+  controllers = require('./controllers')
+
+
 routes.get('/contacts', controllers.ContactsController.getContacts)
 routes.post('/addContact', controllers.ContactsController.addContact)
 routes.get('/contact/:id', controllers.ContactsController.getContact)

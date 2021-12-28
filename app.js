@@ -9,23 +9,21 @@ const
       methods: ['GET', 'POST']
     }
   }),
-  singleChatRoutes = require('./src/modules/singleChat/routes'),
-  services = require('./src/modules/singleChat/services/contactsServices')
+  chatRoomRoutes = require('./src/modules/Rooms/routes'),
+  chatRoomServices = require('./src/modules/Rooms/services/contactsServices')
 
 app.use(express.json())
-app.use('/api/chat', singleChatRoutes)
+app.use('/api/chat', chatRoomRoutes)
 
 io.on('connection', (socket) => {
   socket.on('newUser', (user) => socket.broadcast.emit('newUser', user))
   socket.on('newMsg', (msg) => {
-    services.getContact(msg.senderId).then((res) => {
-      console.log('res', res)
+    chatRoomServices.getContact(msg.senderId).then((res) => {
       msg.senderName = res.name || ''
       socket.broadcast.emit('newMsg', msg)
-      console.log('msg', msg) 
     })
 
-   
+
   })
 
 })
